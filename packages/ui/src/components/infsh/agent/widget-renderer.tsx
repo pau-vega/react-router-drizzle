@@ -67,64 +67,98 @@ const toTextClasses = (variant?: string): string => {
 // Helper to map size to font size classes
 const toSizeClasses = (size?: string): string => {
   switch (size) {
-    case "xs": return "text-xs"
-    case "sm": return "text-sm"
-    case "md": return "text-base"
-    case "lg": return "text-lg"
-    case "xl": return "text-xl"
-    case "2xl": return "text-2xl"
-    case "3xl": return "text-3xl"
-    default: return "text-sm"
+    case "xs":
+      return "text-xs"
+    case "sm":
+      return "text-sm"
+    case "md":
+      return "text-base"
+    case "lg":
+      return "text-lg"
+    case "xl":
+      return "text-xl"
+    case "2xl":
+      return "text-2xl"
+    case "3xl":
+      return "text-3xl"
+    default:
+      return "text-sm"
   }
 }
 
 // Helper to map weight to font weight classes
 const toWeightClasses = (weight?: string): string => {
   switch (weight) {
-    case "normal": return "font-normal"
-    case "medium": return "font-medium"
-    case "semibold": return "font-semibold"
-    case "bold": return "font-bold"
-    default: return ""
+    case "normal":
+      return "font-normal"
+    case "medium":
+      return "font-medium"
+    case "semibold":
+      return "font-semibold"
+    case "bold":
+      return "font-bold"
+    default:
+      return ""
   }
 }
 
 // Helper to map align to flex classes
 const toAlignClasses = (align?: string): string => {
   switch (align) {
-    case "start": return "items-start"
-    case "center": return "items-center"
-    case "end": return "items-end"
-    case "baseline": return "items-baseline"
-    case "stretch": return "items-stretch"
-    default: return ""
+    case "start":
+      return "items-start"
+    case "center":
+      return "items-center"
+    case "end":
+      return "items-end"
+    case "baseline":
+      return "items-baseline"
+    case "stretch":
+      return "items-stretch"
+    default:
+      return ""
   }
 }
 
 // Helper to map justify to flex classes
 const toJustifyClasses = (justify?: string): string => {
   switch (justify) {
-    case "start": return "justify-start"
-    case "center": return "justify-center"
-    case "end": return "justify-end"
-    case "between": return "justify-between"
-    case "around": return "justify-around"
-    case "evenly": return "justify-evenly"
-    default: return ""
+    case "start":
+      return "justify-start"
+    case "center":
+      return "justify-center"
+    case "end":
+      return "justify-end"
+    case "between":
+      return "justify-between"
+    case "around":
+      return "justify-around"
+    case "evenly":
+      return "justify-evenly"
+    default:
+      return ""
   }
 }
 
 // Helper to map radius to border radius classes
 const toRadiusClasses = (radius?: string): string => {
   switch (radius) {
-    case "none": return "rounded-none"
-    case "sm": return "rounded-sm"
-    case "md": return "rounded-md"
-    case "lg": return "rounded-lg"
-    case "xl": return "rounded-xl"
-    case "2xl": return "rounded-2xl"
-    case "full": return "rounded-full"
-    default: return "rounded-md"
+    case "none":
+      return "rounded-none"
+    case "sm":
+      return "rounded-sm"
+    case "md":
+      return "rounded-md"
+    case "lg":
+      return "rounded-lg"
+    case "xl":
+      return "rounded-xl"
+    case "2xl":
+      return "rounded-2xl"
+    case "full":
+      return "rounded-full"
+    default:
+      return "rounded-md"
   }
 }
 
@@ -193,11 +227,13 @@ const toBackgroundStyles = (background?: string | { light?: string; dark?: strin
   }
 
   // Raw CSS value
-  if (background.startsWith("#") ||
+  if (
+    background.startsWith("#") ||
     background.startsWith("rgb") ||
     background.startsWith("hsl") ||
     background.startsWith("linear-gradient") ||
-    background.startsWith("radial-gradient")) {
+    background.startsWith("radial-gradient")
+  ) {
     return { style: { background } }
   }
 
@@ -217,21 +253,14 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
 
     case "title":
       return (
-        <h3 className={cn(
-          "font-semibold leading-tight",
-          toSizeClasses(node.size),
-          toWeightClasses(node.weight)
-        )}>
+        <h3 className={cn("font-semibold leading-tight", toSizeClasses(node.size), toWeightClasses(node.weight))}>
           {node.value ?? ""}
         </h3>
       )
 
     case "caption":
       return (
-        <p className={cn(
-          "text-xs text-muted-foreground",
-          node.color === "tertiary" && "opacity-70"
-        )}>
+        <p className={cn("text-xs text-muted-foreground", node.color === "tertiary" && "opacity-70")}>
           {node.value ?? ""}
         </p>
       )
@@ -253,22 +282,27 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
           alt={node.alt ?? ""}
           className="rounded-md max-w-full h-auto"
           style={{
-            height: typeof node.height === 'number' ? `${node.height}px` : node.height,
-            width: typeof node.width === 'number' ? `${node.width}px` : node.width,
+            height: typeof node.height === "number" ? `${node.height}px` : node.height,
+            width: typeof node.width === "number" ? `${node.width}px` : node.width,
           }}
         />
       )
 
     case "badge":
-      return <Badge variant={toBadgeVariant(node.variant)} className="lowercase">{node.label}</Badge>
+      return (
+        <Badge variant={toBadgeVariant(node.variant)} className="lowercase">
+          {node.label}
+        </Badge>
+      )
 
     case "icon":
       return (
-        <span className={cn(
-          "inline-flex items-center justify-center",
-          node.size === "sm" ? "w-4 h-4 text-sm" :
-            node.size === "lg" ? "w-6 h-6 text-lg" : "w-5 h-5 text-base"
-        )}>
+        <span
+          className={cn(
+            "inline-flex items-center justify-center",
+            node.size === "sm" ? "w-4 h-4 text-sm" : node.size === "lg" ? "w-6 h-6 text-lg" : "w-5 h-5 text-base",
+          )}
+        >
           {node.iconName || "●"}
         </span>
       )
@@ -276,7 +310,7 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
     case "button": {
       const clickAction = getClickAction(node)
       const isLoading = loadingActionType === clickAction?.type
-      const shouldShowSelfLoading = clickAction?.loadingBehavior === 'self' || clickAction?.loadingBehavior === 'auto'
+      const shouldShowSelfLoading = clickAction?.loadingBehavior === "self" || clickAction?.loadingBehavior === "auto"
       return (
         <Button
           variant={toButtonVariant(node.variant)}
@@ -294,7 +328,7 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
         <Input
           name={node.name}
           placeholder={node.placeholder}
-          value={(node.name ? formData[node.name] as string : node.defaultValue) ?? node.defaultValue ?? ""}
+          value={(node.name ? (formData[node.name] as string) : node.defaultValue) ?? node.defaultValue ?? ""}
           onChange={(e) => node.name && setFormValue(node.name, e.target.value)}
           disabled={isDisabled || node.disabled}
           required={node.required}
@@ -307,7 +341,7 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
         <textarea
           name={node.name}
           placeholder={node.placeholder}
-          value={(node.name ? formData[node.name] as string : node.defaultValue) ?? node.defaultValue ?? ""}
+          value={(node.name ? (formData[node.name] as string) : node.defaultValue) ?? node.defaultValue ?? ""}
           onChange={(e) => node.name && setFormValue(node.name, e.target.value)}
           disabled={isDisabled || node.disabled}
           required={node.required}
@@ -338,7 +372,9 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
 
     case "checkbox": {
       const checkboxId = `checkbox-${node.name}`
-      const isChecked = node.name ? (formData[node.name] as boolean | undefined) ?? node.defaultChecked : node.defaultChecked
+      const isChecked = node.name
+        ? ((formData[node.name] as boolean | undefined) ?? node.defaultChecked)
+        : node.defaultChecked
       return (
         <div className="flex items-center space-x-2">
           <Checkbox
@@ -347,7 +383,10 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
             disabled={isDisabled || node.disabled}
             onCheckedChange={(checked) => node.name && setFormValue(node.name, !!checked)}
           />
-          <Label htmlFor={checkboxId} className={cn("text-sm", (isDisabled || node.disabled) ? "cursor-default" : "cursor-pointer")}>
+          <Label
+            htmlFor={checkboxId}
+            className={cn("text-sm", isDisabled || node.disabled ? "cursor-default" : "cursor-pointer")}
+          >
             {node.label}
           </Label>
         </div>
@@ -357,10 +396,7 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
     case "radio-group": {
       const radioValue = node.name ? (formData[node.name] as string | undefined) : undefined
       return (
-        <div className={cn(
-          "flex gap-2",
-          node.direction === "row" ? "flex-row flex-wrap" : "flex-col"
-        )}>
+        <div className={cn("flex gap-2", node.direction === "row" ? "flex-row flex-wrap" : "flex-col")}>
           {(node.options ?? []).map((opt) => {
             const radioId = `radio-${node.name}-${opt.value}`
             return (
@@ -375,7 +411,9 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
                   disabled={isDisabled || node.disabled}
                   className="h-4 w-4 border-border text-primary focus:ring-ring"
                 />
-                <Label htmlFor={radioId} className="text-sm">{opt.label}</Label>
+                <Label htmlFor={radioId} className="text-sm">
+                  {opt.label}
+                </Label>
               </div>
             )
           })}
@@ -385,12 +423,14 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
 
     case "row":
       return (
-        <div className={cn(
-          "flex flex-row flex-wrap",
-          toAlignClasses(node.align) || "items-center",
-          toJustifyClasses(node.justify),
-          `gap-${node.gap ?? 2}`
-        )}>
+        <div
+          className={cn(
+            "flex flex-row flex-wrap",
+            toAlignClasses(node.align) || "items-center",
+            toJustifyClasses(node.justify),
+            `gap-${node.gap ?? 2}`,
+          )}
+        >
           {(node.children ?? []).map((child, i) => (
             <NodeRenderer key={i} node={child} />
           ))}
@@ -399,12 +439,14 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
 
     case "col":
       return (
-        <div className={cn(
-          "flex flex-col",
-          toAlignClasses(node.align),
-          toJustifyClasses(node.justify),
-          `gap-${node.gap ?? 2}`
-        )}>
+        <div
+          className={cn(
+            "flex flex-col",
+            toAlignClasses(node.align),
+            toJustifyClasses(node.justify),
+            `gap-${node.gap ?? 2}`,
+          )}
+        >
           {(node.children ?? []).map((child, i) => (
             <NodeRenderer key={i} node={child} />
           ))}
@@ -415,20 +457,20 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
       const bgStyles = toBackgroundStyles(node.background as string | { light?: string; dark?: string } | undefined)
       const boxStyle: React.CSSProperties = {
         ...bgStyles.style,
-        minHeight: typeof node.minHeight === 'number' ? `${node.minHeight}px` : node.minHeight,
-        maxHeight: typeof node.maxHeight === 'number' ? `${node.maxHeight}px` : node.maxHeight,
-        minWidth: typeof node.minWidth === 'number' ? `${node.minWidth}px` : node.minWidth,
-        maxWidth: typeof node.maxWidth === 'number' ? `${node.maxWidth}px` : node.maxWidth,
+        minHeight: typeof node.minHeight === "number" ? `${node.minHeight}px` : node.minHeight,
+        maxHeight: typeof node.maxHeight === "number" ? `${node.maxHeight}px` : node.maxHeight,
+        minWidth: typeof node.minWidth === "number" ? `${node.minWidth}px` : node.minWidth,
+        maxWidth: typeof node.maxWidth === "number" ? `${node.maxWidth}px` : node.maxWidth,
         aspectRatio: node.aspectRatio,
       }
       return (
         <div
           className={cn(
             "flex flex-col",
-            typeof node.padding === 'number' ? `p-${node.padding}` : "p-3",
+            typeof node.padding === "number" ? `p-${node.padding}` : "p-3",
             bgStyles.className,
             toRadiusClasses(node.radius),
-            `gap-${node.gap ?? 2}`
+            `gap-${node.gap ?? 2}`,
           )}
           style={boxStyle}
         >
@@ -440,24 +482,21 @@ const NodeRenderer = React.memo(({ node }: { node: WidgetNode }) => {
     }
 
     case "spacer":
-      return <div className="flex-1" style={{ minHeight: typeof node.minSize === 'number' ? node.minSize : undefined }} />
+      return (
+        <div className="flex-1" style={{ minHeight: typeof node.minSize === "number" ? node.minSize : undefined }} />
+      )
 
     case "divider":
       return (
-        <div className={cn(
-          "w-full h-px bg-border",
-          typeof node.spacing === 'number' ? `my-${node.spacing}` : "my-2"
-        )} />
+        <div
+          className={cn("w-full h-px bg-border", typeof node.spacing === "number" ? `my-${node.spacing}` : "my-2")}
+        />
       )
 
     case "form":
       return (
         <form
-          className={cn(
-            "flex",
-            node.direction === "row" ? "flex-row flex-wrap" : "flex-col",
-            `gap-${node.gap ?? 3}`
-          )}
+          className={cn("flex", node.direction === "row" ? "flex-row flex-wrap" : "flex-col", `gap-${node.gap ?? 3}`)}
           onSubmit={(e) => {
             e.preventDefault()
             if (node.onSubmitAction) {
@@ -486,16 +525,16 @@ const extractDefaultFormValues = (nodes: WidgetNode[]): FormData => {
     // Extract default values from form fields
     if (node.name) {
       switch (node.type) {
-        case 'checkbox':
+        case "checkbox":
           defaults[node.name] = node.defaultChecked ?? false
           break
-        case 'input':
-        case 'textarea':
-          defaults[node.name] = node.defaultValue ?? ''
+        case "input":
+        case "textarea":
+          defaults[node.name] = node.defaultValue ?? ""
           break
-        case 'select':
-        case 'radio-group':
-          defaults[node.name] = '' // Empty string means no selection
+        case "select":
+        case "radio-group":
+          defaults[node.name] = "" // Empty string means no selection
           break
       }
     }
@@ -523,7 +562,7 @@ export interface WidgetRendererProps {
 export const WidgetRenderer = React.memo(({ widget, onAction, className, disabled, asCard }: WidgetRendererProps) => {
   // Initialize form data with default values from widget nodes
   const [formData, setFormData] = useState<FormData>(() => {
-    if (typeof widget === 'string') return {}
+    if (typeof widget === "string") return {}
     return extractDefaultFormValues(widget.children ?? [])
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -540,16 +579,16 @@ export const WidgetRenderer = React.memo(({ widget, onAction, className, disable
     const mergedFormData: FormData = { ...actionFormData }
     if (action.payload) {
       for (const [key, value] of Object.entries(action.payload)) {
-        if (typeof value === 'string' || typeof value === 'boolean' || value === undefined) {
+        if (typeof value === "string" || typeof value === "boolean" || value === undefined) {
           mergedFormData[key] = value
         }
       }
     }
 
     // Set loading state based on loadingBehavior
-    if (action.loadingBehavior !== 'none') {
+    if (action.loadingBehavior !== "none") {
       setIsSubmitting(true)
-      if (action.loadingBehavior === 'self' || action.loadingBehavior === 'auto') {
+      if (action.loadingBehavior === "self" || action.loadingBehavior === "auto") {
         setLoadingActionType(action.type)
       }
     }
@@ -594,9 +633,7 @@ export const WidgetRenderer = React.memo(({ widget, onAction, className, disable
               <CardTitle className="text-base">{widget.title}</CardTitle>
             </CardHeader>
           )}
-          <CardContent>
-            {content}
-          </CardContent>
+          <CardContent>{content}</CardContent>
         </Card>
       </WidgetContext.Provider>
     )
@@ -605,9 +642,7 @@ export const WidgetRenderer = React.memo(({ widget, onAction, className, disable
   // No Card wrapper - just render content directly
   return (
     <WidgetContext.Provider value={{ onAction: handleAction, formData, setFormValue, isDisabled, loadingActionType }}>
-      <div className={cn("w-full", className)}>
-        {content}
-      </div>
+      <div className={cn("w-full", className)}>{content}</div>
     </WidgetContext.Provider>
   )
 })

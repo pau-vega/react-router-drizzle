@@ -1,4 +1,4 @@
-'use client';
+"use client"
 
 /**
  * OutputField Component
@@ -10,61 +10,61 @@
  * - Booleans with colored pills
  */
 
-import { memo, useState } from 'react';
-import { cn } from '@ui/lib/utils';
-import { Button } from '@ui/components/button';
-import { Card, CardContent } from '@ui/components/card';
-import { Label } from '@ui/components/label';
-import { ChevronDownIcon, ChevronRightIcon, Copy, Check } from 'lucide-react';
-import { FilePreview, type PartialFile } from './file-preview';
-import { MarkdownRenderer } from '@ui/components/markdown-renderer';
+import { memo, useState } from "react"
+import { cn } from "@ui/lib/utils"
+import { Button } from "@ui/components/button"
+import { Card, CardContent } from "@ui/components/card"
+import { Label } from "@ui/components/label"
+import { ChevronDownIcon, ChevronRightIcon, Copy, Check } from "lucide-react"
+import { FilePreview, type PartialFile } from "./file-preview"
+import { MarkdownRenderer } from "@ui/components/markdown-renderer"
 
 /** Field schema (simplified from SDK) */
 export interface Field {
-  key?: string;
-  type?: string;
-  properties?: Record<string, Field>;
-  items?: Field;
+  key?: string
+  type?: string
+  properties?: Record<string, Field>
+  items?: Field
 }
 
 /** Check if data is a file object */
 export function isFile(data: unknown): data is PartialFile {
-  return typeof data === 'object' && data !== null && 'uri' in data && typeof (data as PartialFile).uri === 'string';
+  return typeof data === "object" && data !== null && "uri" in data && typeof (data as PartialFile).uri === "string"
 }
 
 /** Check if data is a URL string */
 export function isUrl(data: unknown): boolean {
-  return typeof data === 'string' && (data.startsWith('http://') || data.startsWith('https://'));
+  return typeof data === "string" && (data.startsWith("http://") || data.startsWith("https://"))
 }
 
 /** Transform URL or file to PartialFile */
 function transformToFileObject(data: unknown): PartialFile {
   if (isUrl(data)) {
-    const uri = data as string;
+    const uri = data as string
     return {
       uri,
       path: uri,
-      filename: uri.split('/').pop()?.split('?')[0],
-    };
+      filename: uri.split("/").pop()?.split("?")[0],
+    }
   }
-  return data as PartialFile;
+  return data as PartialFile
 }
 
 export interface OutputFieldProps {
   /** Field schema (optional, for labels) */
-  field?: Field;
+  field?: Field
   /** The data to render */
-  data: unknown;
+  data: unknown
   /** Additional classes */
-  className?: string;
+  className?: string
   /** Compact mode (hide labels) */
-  compact?: boolean;
+  compact?: boolean
   /** Show action buttons */
-  buttons?: boolean;
+  buttons?: boolean
   /** Allow clicking to interact */
-  clickable?: boolean;
+  clickable?: boolean
   /** Auto-play videos */
-  autoplay?: boolean;
+  autoplay?: boolean
 }
 
 export const OutputField = memo(function OutputField({
@@ -76,50 +76,47 @@ export const OutputField = memo(function OutputField({
   clickable = true,
   autoplay,
 }: OutputFieldProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   // Handle null/undefined
   if (data === null || data === undefined) {
-    return null;
+    return null
   }
 
-  const isArray = Array.isArray(data);
-  const isFileArray =
-    isArray && data.length > 0 && data.every((item) => item !== null && (isUrl(item) || isFile(item)));
-  const isSingleFile = !isArray && (isUrl(data) || isFile(data));
+  const isArray = Array.isArray(data)
+  const isFileArray = isArray && data.length > 0 && data.every((item) => item !== null && (isUrl(item) || isFile(item)))
+  const isSingleFile = !isArray && (isUrl(data) || isFile(data))
 
   // Transform data if needed
   const transformedData = isFileArray
     ? (data as unknown[]).map(transformToFileObject)
     : isSingleFile
       ? transformToFileObject(data)
-      : data;
+      : data
 
-  const isObject = !isSingleFile && !isFileArray && typeof data === 'object' && !isArray;
+  const isObject = !isSingleFile && !isFileArray && typeof data === "object" && !isArray
 
   // Empty arrays
   if (isArray && data.length === 0) {
-    return null;
+    return null
   }
 
   const handleCopy = async () => {
-    const text = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
+    const text = typeof data === "string" ? data : JSON.stringify(data, null, 2)
+    await navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn("space-y-2", className)}>
       {/* Label */}
       {field?.key && !compact && (
         <div className="flex flex-row gap-2 items-center">
           <Label className="text-muted-foreground flex items-center gap-2 lowercase">
             {field.key}
-            {field.type && (
-              <span className="text-xs text-muted-foreground/60 font-normal">{field.type}</span>
-            )}
+            {field.type && <span className="text-xs text-muted-foreground/60 font-normal">{field.type}</span>}
           </Label>
           {isObject && (
             <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => setIsOpen(!isOpen)}>
@@ -154,16 +151,11 @@ export const OutputField = memo(function OutputField({
         <>
           {compact && (
             <Card className="p-0">
-              <CardContent
-                onClick={() => setIsOpen(!isOpen)}
-                className="cursor-pointer hover:bg-muted/50 px-4 py-2"
-              >
+              <CardContent onClick={() => setIsOpen(!isOpen)} className="cursor-pointer hover:bg-muted/50 px-4 py-2">
                 <div className="flex flex-row justify-between items-center">
                   <Label className="text-muted-foreground flex items-center gap-2 lowercase">
                     {field?.key}
-                    {field?.type && (
-                      <span className="text-xs text-muted-foreground/60 font-normal">{field.type}</span>
-                    )}
+                    {field?.type && <span className="text-xs text-muted-foreground/60 font-normal">{field.type}</span>}
                   </Label>
                   {isOpen ? <ChevronDownIcon className="h-4 w-4" /> : <ChevronRightIcon className="h-4 w-4" />}
                 </div>
@@ -184,24 +176,24 @@ export const OutputField = memo(function OutputField({
                           buttons={buttons}
                           clickable={clickable}
                         />
-                      )
+                      ),
                   )}
                 </div>
               </CardContent>
             </Card>
           )}
         </>
-      ) : /* Boolean */ typeof data === 'boolean' ? (
+      ) : /* Boolean */ typeof data === "boolean" ? (
         <Card className="p-0">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <div
                 className={cn(
-                  'px-2 py-1 rounded-full text-sm font-medium',
-                  data ? 'bg-green-500/15 text-green-600' : 'bg-red-500/15 text-red-600'
+                  "px-2 py-1 rounded-full text-sm font-medium",
+                  data ? "bg-green-500/15 text-green-600" : "bg-red-500/15 text-red-600",
                 )}
               >
-                {data ? 'true' : 'false'}
+                {data ? "true" : "false"}
               </div>
             </div>
           </CardContent>
@@ -211,13 +203,7 @@ export const OutputField = memo(function OutputField({
           <CardContent className="p-4">
             <div className="space-y-2 flex flex-col gap-2 max-h-[300px] overflow-y-auto">
               {(data as unknown[]).map((item, index) => (
-                <OutputField
-                  key={index}
-                  field={field?.items}
-                  data={item}
-                  buttons={buttons}
-                  clickable={clickable}
-                />
+                <OutputField key={index} field={field?.items} data={item} buttons={buttons} clickable={clickable} />
               ))}
             </div>
           </CardContent>
@@ -236,8 +222,8 @@ export const OutputField = memo(function OutputField({
               >
                 {copied ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
               </Button>
-              <div className={cn('max-h-[300px] break-all pr-8', clickable ? 'overflow-y-auto' : 'overflow-y-hidden')}>
-                {typeof data === 'string' ? (
+              <div className={cn("max-h-[300px] break-all pr-8", clickable ? "overflow-y-auto" : "overflow-y-hidden")}>
+                {typeof data === "string" ? (
                   <MarkdownRenderer content={data} />
                 ) : (
                   <span className="text-sm">{String(data)}</span>
@@ -248,41 +234,31 @@ export const OutputField = memo(function OutputField({
         </Card>
       )}
     </div>
-  );
-});
+  )
+})
 
 export interface OutputFieldsProps {
   /** The output data object */
-  output: Record<string, unknown>;
+  output: Record<string, unknown>
   /** Field schema for labels */
-  fields?: Record<string, Field>;
+  fields?: Record<string, Field>
   /** Additional classes */
-  className?: string;
+  className?: string
   /** Compact mode */
-  compact?: boolean;
+  compact?: boolean
 }
 
 /** Render multiple output fields */
-export const OutputFields = memo(function OutputFields({
-  output,
-  fields,
-  className,
-  compact,
-}: OutputFieldsProps) {
-  if (!output || typeof output !== 'object') {
-    return null;
+export const OutputFields = memo(function OutputFields({ output, fields, className, compact }: OutputFieldsProps) {
+  if (!output || typeof output !== "object") {
+    return null
   }
 
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={cn("space-y-4", className)}>
       {Object.entries(output).map(([key, value]) => (
-        <OutputField
-          key={key}
-          field={{ key, ...(fields?.[key] || {}) }}
-          data={value}
-          compact={compact}
-        />
+        <OutputField key={key} field={{ key, ...(fields?.[key] || {}) }} data={value} compact={compact} />
       ))}
     </div>
-  );
-});
+  )
+})

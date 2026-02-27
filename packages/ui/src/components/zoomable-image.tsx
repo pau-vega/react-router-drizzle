@@ -4,8 +4,7 @@ import "./zoomable-image.css"
 import { ImageOff } from "lucide-react"
 import { DetailedHTMLProps, ImgHTMLAttributes, useState } from "react"
 
-export interface ZoomableImageProps
-  extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
+export interface ZoomableImageProps extends DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
   /** Disable zoom behavior */
   disabled?: boolean
   /** Higher quality image src to load when zoomed */
@@ -44,27 +43,14 @@ export default function ZoomableImage({
     )
   }
 
-  const image = (
-    <img
-      src={src}
-      alt={alt || ""}
-      className={className}
-      onLoad={onLoad}
-      onError={handleError}
-      {...rest}
-    />
-  )
+  const image = <img src={src} alt={alt || ""} className={className} onLoad={onLoad} onError={handleError} {...rest} />
 
   if (disabled) {
     return image
   }
 
   return (
-    <Zoom
-      classDialog="zoomable-image-dialog"
-      zoomMargin={zoomMargin}
-      zoomImg={zoomSrc ? { src: zoomSrc } : undefined}
-    >
+    <Zoom classDialog="zoomable-image-dialog" zoomMargin={zoomMargin} zoomImg={zoomSrc ? { src: zoomSrc } : undefined}>
       {image}
     </Zoom>
   )

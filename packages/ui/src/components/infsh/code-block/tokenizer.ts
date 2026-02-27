@@ -1,5 +1,5 @@
-import type { Token, TokenType, LanguageDefinition } from '@ui/components/infsh/code-block/types'
-import { getLanguage } from '@ui/components/infsh/code-block/languages'
+import type { Token, TokenType, LanguageDefinition } from "@ui/components/infsh/code-block/types"
+import { getLanguage } from "@ui/components/infsh/code-block/languages"
 
 export interface TokenizeContext {
   /** Whether we're inside a multiline template literal */
@@ -14,12 +14,12 @@ export interface TokenizeContext {
 function getKeywordType(word: string, lang: LanguageDefinition): TokenType | null {
   const { keywords } = lang
 
-  if (keywords.import?.has(word)) return 'keyword-import'
-  if (keywords.declaration?.has(word)) return 'keyword-declaration'
-  if (keywords.control?.has(word)) return 'keyword-control'
-  if (keywords.value?.has(word)) return 'keyword-value'
-  if (keywords.type?.has(word)) return 'type'
-  if (keywords.other?.has(word)) return 'keyword-other'
+  if (keywords.import?.has(word)) return "keyword-import"
+  if (keywords.declaration?.has(word)) return "keyword-declaration"
+  if (keywords.control?.has(word)) return "keyword-control"
+  if (keywords.value?.has(word)) return "keyword-value"
+  if (keywords.type?.has(word)) return "type"
+  if (keywords.other?.has(word)) return "keyword-other"
 
   return null
 }
@@ -44,7 +44,7 @@ function tryMatch(remaining: string, patterns: RegExp[] | undefined): string | n
  * Check if language supports JSX
  */
 function isJsxLanguage(languageName: string): boolean {
-  const jsxLangs = ['javascript', 'typescript', 'jsx', 'tsx', 'js', 'ts']
+  const jsxLangs = ["javascript", "typescript", "jsx", "tsx", "js", "ts"]
   return jsxLangs.includes(languageName.toLowerCase())
 }
 
@@ -52,7 +52,7 @@ function isJsxLanguage(languageName: string): boolean {
  * Check if language is JSON
  */
 function isJsonLanguage(languageName: string): boolean {
-  return ['json', 'jsonc'].includes(languageName.toLowerCase())
+  return ["json", "jsonc"].includes(languageName.toLowerCase())
 }
 
 /**
@@ -91,7 +91,7 @@ function detectJsxContext(code: string): boolean {
 export function tokenize(
   code: string,
   languageName: string,
-  context?: TokenizeContext
+  context?: TokenizeContext,
 ): { tokens: Token[]; context: TokenizeContext } {
   const lang = getLanguage(languageName)
   const tokens: Token[] = []
@@ -105,15 +105,15 @@ export function tokenize(
   // If we're inside a template literal from a previous line, treat the whole line as a string
   // until we find a closing backtick
   if (inTemplateLiteral) {
-    const closingIndex = remaining.indexOf('`')
+    const closingIndex = remaining.indexOf("`")
     if (closingIndex === -1) {
       // No closing backtick, entire line is part of string
-      tokens.push({ type: 'string', content: remaining })
+      tokens.push({ type: "string", content: remaining })
       return { tokens, context: { inTemplateLiteral: true } }
     } else {
       // Found closing backtick
       const stringPart = remaining.slice(0, closingIndex + 1)
-      tokens.push({ type: 'string', content: stringPart })
+      tokens.push({ type: "string", content: stringPart })
       remaining = remaining.slice(closingIndex + 1)
       inTemplateLiteral = false
       // Continue tokenizing the rest of the line
@@ -131,7 +131,7 @@ export function tokenize(
     if (!inJsxTag && lang?.patterns.comment) {
       const comment = tryMatch(remaining, lang.patterns.comment)
       if (comment) {
-        tokens.push({ type: 'comment', content: comment })
+        tokens.push({ type: "comment", content: comment })
         remaining = remaining.slice(comment.length)
         matched = true
         continue
@@ -144,13 +144,13 @@ export function tokenize(
       const jsxOpenTag = remaining.match(/^<\/?([A-Z][a-zA-Z0-9]*|[a-z][a-z0-9-]*)/)
       if (jsxOpenTag) {
         // Push the < or </
-        const bracket = remaining[0] === '<' && remaining[1] === '/' ? '</' : '<'
-        tokens.push({ type: 'punctuation', content: bracket })
+        const bracket = remaining[0] === "<" && remaining[1] === "/" ? "</" : "<"
+        tokens.push({ type: "punctuation", content: bracket })
         remaining = remaining.slice(bracket.length)
 
         // Push the tag name
         const tagName = jsxOpenTag[1]
-        tokens.push({ type: 'tag', content: tagName })
+        tokens.push({ type: "tag", content: tagName })
         remaining = remaining.slice(tagName.length)
 
         inJsxTag = true
@@ -160,15 +160,15 @@ export function tokenize(
 
       // Self-closing /> or closing >
       if (inJsxTag) {
-        if (remaining.startsWith('/>')) {
-          tokens.push({ type: 'punctuation', content: '/>' })
+        if (remaining.startsWith("/>")) {
+          tokens.push({ type: "punctuation", content: "/>" })
           remaining = remaining.slice(2)
           inJsxTag = false
           matched = true
           continue
         }
-        if (remaining.startsWith('>')) {
-          tokens.push({ type: 'punctuation', content: '>' })
+        if (remaining.startsWith(">")) {
+          tokens.push({ type: "punctuation", content: ">" })
           remaining = remaining.slice(1)
           inJsxTag = false
           matched = true
@@ -178,7 +178,7 @@ export function tokenize(
         // JSX attribute: propName= or propName (boolean) or propName (before />)
         const jsxAttr = remaining.match(/^([a-zA-Z_][a-zA-Z0-9_-]*)(?=\s*=|\s*\/>|\s*>|\s+[a-zA-Z_]|\s*$)/)
         if (jsxAttr) {
-          tokens.push({ type: 'attribute', content: jsxAttr[1] })
+          tokens.push({ type: "attribute", content: jsxAttr[1] })
           remaining = remaining.slice(jsxAttr[1].length)
           matched = true
           continue
@@ -193,7 +193,7 @@ export function tokenize(
         // In JSON, check if this string is a key (followed by :)
         const afterStr = remaining.slice(str.length)
         const isJsonKey = isJson && /^\s*:/.test(afterStr)
-        tokens.push({ type: isJsonKey ? 'property' : 'string', content: str })
+        tokens.push({ type: isJsonKey ? "property" : "string", content: str })
         remaining = remaining.slice(str.length)
         matched = true
         continue
@@ -201,9 +201,9 @@ export function tokenize(
 
       // Check for template literal that starts but doesn't end (multiline)
       // Only trigger if we're AT a backtick and it doesn't close on this line
-      if (remaining[0] === '`') {
+      if (remaining[0] === "`") {
         // Template literal starts but no closing backtick on this line
-        tokens.push({ type: 'string', content: remaining })
+        tokens.push({ type: "string", content: remaining })
         return { tokens, context: { inTemplateLiteral: true } }
       }
     }
@@ -212,7 +212,7 @@ export function tokenize(
     if (!lang) {
       const doubleStr = remaining.match(/^"(?:[^"\\]|\\.)*"/)
       if (doubleStr) {
-        tokens.push({ type: 'string', content: doubleStr[0] })
+        tokens.push({ type: "string", content: doubleStr[0] })
         remaining = remaining.slice(doubleStr[0].length)
         matched = true
         continue
@@ -220,7 +220,7 @@ export function tokenize(
 
       const singleStr = remaining.match(/^'(?:[^'\\]|\\.)*'/)
       if (singleStr) {
-        tokens.push({ type: 'string', content: singleStr[0] })
+        tokens.push({ type: "string", content: singleStr[0] })
         remaining = remaining.slice(singleStr[0].length)
         matched = true
         continue
@@ -230,7 +230,7 @@ export function tokenize(
     // Numbers
     const number = remaining.match(/^-?\b\d+\.?\d*(?:e[+-]?\d+)?\b/i)
     if (number) {
-      tokens.push({ type: 'number', content: number[0] })
+      tokens.push({ type: "number", content: number[0] })
       remaining = remaining.slice(number[0].length)
       matched = true
       continue
@@ -245,7 +245,7 @@ export function tokenize(
 
       let tokenType: TokenType | null = null
       if (isPropertyKey) {
-        tokenType = 'property'
+        tokenType = "property"
       } else if (lang && !inJsxTag) {
         tokenType = getKeywordType(word[0], lang)
       }
@@ -260,11 +260,9 @@ export function tokenize(
     }
 
     // Operators (common across most languages)
-    const operator = remaining.match(
-      /^(?:===|!==|==|!=|<=|>=|=>|->|::|\.\.\.?|\?\?|\?\.|&&|\|\||[+\-*/%<>=!&|^~?:])/
-    )
+    const operator = remaining.match(/^(?:===|!==|==|!=|<=|>=|=>|->|::|\.\.\.?|\?\?|\?\.|&&|\|\||[+\-*/%<>=!&|^~?:])/)
     if (operator) {
-      tokens.push({ type: 'operator', content: operator[0] })
+      tokens.push({ type: "operator", content: operator[0] })
       remaining = remaining.slice(operator[0].length)
       matched = true
       continue
@@ -273,7 +271,7 @@ export function tokenize(
     // Punctuation
     const punct = remaining.match(/^[{}[\]();,.<>]/)
     if (punct) {
-      tokens.push({ type: 'punctuation', content: punct[0] })
+      tokens.push({ type: "punctuation", content: punct[0] })
       remaining = remaining.slice(punct[0].length)
       matched = true
       continue

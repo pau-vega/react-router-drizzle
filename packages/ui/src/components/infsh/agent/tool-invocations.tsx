@@ -1,39 +1,35 @@
-import React, { memo } from 'react';
-import { cn } from '@ui/lib/utils';
-import { ToolInvocation } from '@ui/components/infsh/agent/tool-invocation';
-import type { ChatMessageDTO } from '@inferencesh/sdk/agent';
+import React, { memo } from "react"
+import { cn } from "@ui/lib/utils"
+import { ToolInvocation } from "@ui/components/infsh/agent/tool-invocation"
+import type { ChatMessageDTO } from "@inferencesh/sdk/agent"
 
 interface ToolInvocationsProps {
-  message: ChatMessageDTO;
-  className?: string;
+  message: ChatMessageDTO
+  className?: string
 }
 
 /**
  * ToolInvocations - List of tool calls for a message
- * 
+ *
  * @example
  * ```tsx
  * <ToolInvocations message={message} />
  * ```
  */
-export const ToolInvocations = memo(function ToolInvocations({
-  message,
-  className,
-}: ToolInvocationsProps) {
-  const invocations = message.tool_invocations;
+export const ToolInvocations = memo(function ToolInvocations({ message, className }: ToolInvocationsProps) {
+  const invocations = message.tool_invocations
 
   if (!invocations || invocations.length === 0) {
-    return null;
+    return null
   }
 
   return (
-    <div className={cn('mt-2 space-y-1', className)}>
+    <div className={cn("mt-2 space-y-1", className)}>
       {invocations.map((invocation, idx) => (
         <ToolInvocation key={invocation.id || idx} invocation={invocation} />
       ))}
     </div>
-  );
-});
+  )
+})
 
-ToolInvocations.displayName = 'ToolInvocations';
-
+ToolInvocations.displayName = "ToolInvocations"

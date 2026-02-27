@@ -1,7 +1,7 @@
 export function isCloudInferenceUrl(url: string): boolean {
   try {
     const urlObj = new URL(url)
-    return urlObj.hostname === 'cloud.inference.sh'
+    return urlObj.hostname === "cloud.inference.sh"
   } catch {
     return false
   }
@@ -16,19 +16,19 @@ export function getYouTubeVideoId(url: string): string | null {
     const urlObj = new URL(url)
 
     // youtu.be format
-    if (urlObj.hostname === 'youtu.be') {
+    if (urlObj.hostname === "youtu.be") {
       return urlObj.pathname.slice(1)
     }
 
     // youtube.com formats
-    if (urlObj.hostname === 'youtube.com' || urlObj.hostname === 'www.youtube.com') {
+    if (urlObj.hostname === "youtube.com" || urlObj.hostname === "www.youtube.com") {
       // Watch URLs: youtube.com/watch?v=VIDEO_ID
-      if (urlObj.searchParams.has('v')) {
-        return urlObj.searchParams.get('v')
+      if (urlObj.searchParams.has("v")) {
+        return urlObj.searchParams.get("v")
       }
       // Embed URLs: youtube.com/embed/VIDEO_ID
-      if (urlObj.pathname.startsWith('/embed/')) {
-        return urlObj.pathname.split('/')[2]
+      if (urlObj.pathname.startsWith("/embed/")) {
+        return urlObj.pathname.split("/")[2]
       }
     }
 
@@ -42,7 +42,7 @@ export function getYouTubeVideoId(url: string): string | null {
  * Strip HTML comments from markdown content
  */
 export function stripHtmlComments(content: string): string {
-  return content.replace(/<!--[\s\S]*?-->/g, '')
+  return content.replace(/<!--[\s\S]*?-->/g, "")
 }
 
 /**
@@ -51,7 +51,7 @@ export function stripHtmlComments(content: string): string {
 export function isLikelyMarkdown(input: string): boolean {
   if (!input) return false
   let score = 0
-  
+
   // Headings (# ...)
   if (/(?:^|\n)\s{0,3}#{1,6} \S/.test(input)) score += 2
   // Bold text
@@ -70,7 +70,6 @@ export function isLikelyMarkdown(input: string): boolean {
   if (/(?:^|\n)\|[^\n]*\|\s*(?:\n)\s*\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?/.test(input)) score += 2
   // Horizontal rule
   if (/(?:^|\n)\s{0,3}(?:-{3,}|_{3,}|\*{3,})\s*(?:\n|$)/.test(input)) score += 1
-  
+
   return score > 0
 }
-
