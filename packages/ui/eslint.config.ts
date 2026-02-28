@@ -1,4 +1,4 @@
-import { react } from "@monorepo-template/eslint-config"
+import { react } from "@react-router-drizzle/eslint-config"
 import { defineConfig } from "eslint/config"
 
 export default defineConfig([

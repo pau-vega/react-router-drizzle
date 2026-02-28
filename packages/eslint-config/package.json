@@ -1,5 +1,5 @@
 {
-  "name": "@monorepo-template/eslint-config",
+  "name": "@react-router-drizzle/eslint-config",
   "version": "1.0.0",
   "license": "ISC",
   "type": "module",
@@ -36,19 +36,19 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@eslint-react/eslint-plugin": "^2.12.2",
+    "@eslint-react/eslint-plugin": "^2.13.0",
     "@eslint/js": "^10.0.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-perfectionist": "^5.6.0",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.3.0",
-    "typescript-eslint": "^8.56.0"
+    "typescript-eslint": "^8.56.1"
   },
   "devDependencies": {
-    "@types/node": "^25.3.0",
-    "eslint": "^10.0.0",
-    "eslint-plugin-react-refresh": "^0.5.0",
+    "@types/node": "^25.3.2",
+    "eslint": "^10.0.2",
+    "eslint-plugin-react-refresh": "^0.5.2",
     "prettier": "^3.8.1",
     "tsup": "^8.5.1"
   }
